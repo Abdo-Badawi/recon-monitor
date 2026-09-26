@@ -22,8 +22,9 @@ prepares the SQLite database, and creates the `admin` login. No manual database 
 ### Default credentials
 
 - **Username:** `admin`
-- **Password:** randomly generated — printed once by `setup.sh`. Save it.
-- Missed it? Reset: `.venv/bin/python manage.py changepassword admin`
+- **Password:** `admin` (static default — change it right after first login!)
+- Custom password at setup: `ADMIN_PASSWORD=secret ./scripts/setup.sh`
+- Missed/locked out? Reset: `.venv/bin/python manage.py changepassword admin`
 - Change anytime: log in → **Admin** (`/admin/`) → Users → `admin`, or the
   `changepassword` command above. Roles: Admin / Operator / Viewer
   (new users default to Viewer; Admins can promote via profiles in `/admin/`).

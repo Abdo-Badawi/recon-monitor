@@ -42,10 +42,10 @@ fi
 .venv/bin/python manage.py migrate --noinput
 echo "--> database ready"
 
-# 5. Admin user (only if none exists)
+# 5. Admin user (only if none exists) — static default credentials
 NUSERS=$(echo "from django.contrib.auth.models import User; print(User.objects.count())" | .venv/bin/python manage.py shell 2>/dev/null | tail -n 1)
 if [ "$NUSERS" = "0" ]; then
-  ADMIN_PASS=$(.venv/bin/python -c "import secrets; print(secrets.token_urlsafe(12))")
+  ADMIN_PASS="${ADMIN_PASSWORD:-admin}"
   .venv/bin/python manage.py createsuperuser --noinput --username admin --email admin@localhost >/dev/null 2>&1 || true
   echo "
 from django.contrib.auth.models import User
@@ -54,8 +54,8 @@ u.set_password('$ADMIN_PASS'); u.save()
 " | .venv/bin/python manage.py shell >/dev/null 2>&1
   echo "=================================================="
   echo "  Login: admin"
-  echo "  Password: $ADMIN_PASS"
-  echo "  (change it after login: Admin > Users)"
+  echo "  Password: $ADMIN_PASS  (change it after login!)"
+  echo "  Custom password: ADMIN_PASSWORD=secret ./scripts/setup.sh"
   echo "=================================================="
 fi
 

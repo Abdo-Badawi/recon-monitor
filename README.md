@@ -28,11 +28,9 @@ and creates the `admin` login. No manual database or secret-key steps.
 ### Default credentials
 
 - **Username:** `admin`
-- **Password:** randomly generated — `setup.sh` prints it once at the end. Save it.
-- If you missed it, reset from the project directory:
-  ```bash
-  .venv/bin/python manage.py changepassword admin
-  ```
+- **Password:** `admin` (static default — change it right after first login!)
+- Custom password at setup: `ADMIN_PASSWORD=secret ./scripts/setup.sh`
+- If locked out, reset: `.venv/bin/python manage.py changepassword admin`
 
 ### How to change the password
 
