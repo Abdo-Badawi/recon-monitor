@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% block title %}{{ target.root_domain }}{% endblock %}
+{% block content %}
+<h2>{{ target.root_domain }} <span class="badge b-{{ target.status }}">{{ target.status }}</span> <span class="badge">{{ target.baseline_status }}</span></h2>
+<p style="color:var(--mut)">First seen {{ target.created_at|date:"Y-m-d H:i" }} · Last scan {{ target.last_scan|default:"—" }} · Last change {{ overview.last_change|default:"—" }} · Auth {{ target.authorization_status }}{% if target.authorization_expires_at %} (expires {{ target.authorization_expires_at }}){% endif %}</p>
+<div class="cards">
+<div class="card"><div class="n">{{ overview.subdomains }}</div><div class="l">Subdomains</div></div>
+<div class="card"><div class="n">{{ overview.ips }}</div><div class="l">IPs</div></div>
+<div class="card"><div class="n">{{ overview.ports }}</div><div class="l">Open ports</div></div>
+<div class="card"><div class="n">{{ overview.http }}</div><div class="l">HTTP</div></div>
+<div class="card"><div class="n">{{ overview.urls }}</div><div class="l">URLs</div></div>
+<div class="card"><div class="n">{{ overview.apis }}</div><div class="l">APIs</div></div>
+<div class="card"><div class="n">{{ overview.js }}</div><div class="l">JS</div></div>
+<div class="card"><div class="n">{{ overview.techs }}</div><div class="l">Tech</div></div>
+<div class="card"><div class="n">{{ overview.cves }}</div><div class="l">CVEs</div></div>
+<div class="card"><div class="n">{{ overview.findings }}</div><div class="l">Findings</div></div>
+</div>
+<div class="panel"><h3>Pipeline ({{ overview.running_jobs }} jobs running · <a href="/targets/{{ target.id }}/changes/">What's new ({{ new_24h }}/24h)</a> · <a href="/targets/{{ target.id }}/exports/">Exports</a> · <a href="/targets/{{ target.id }}/">History = events below</a>)</h3>
+<table><tr><th>Stage</th><th>Status</th><th>Running</th></tr>
+{% for p in pipeline %}<tr><td>{{ p.stage }}</td><td><span class="badge">{{ p.status }}</span></td><td>{{ p.running }}</td></tr>{% endfor %}</table></div>
+<div class="row-actions">
+<form class="inline" method="post" action="/targets/{{ target.id }}/scan/">{% csrf_token %}<button>Start scan</button></form>
+<form class="inline" method="post" action="/targets/{{ target.id }}/pause/">{% csrf_token %}<button class="btn ghost">Pause (kill-switch)</button></form>
+<form class="inline" method="post" action="/targets/{{ target.id }}/resume/">{% csrf_token %}<button class="btn ghost">Resume</button></form>
+<a class="btn ghost" href="/targets/{{ target.id }}/edit/">Edit</a>
+</div>
+<div class="cards" style="margin-top:12px">
+<div class="card"><div class="n">{{ subdomain_count }}</div><div class="l">Subdomains</div></div>
+<div class="card"><div class="n">{{ ports|length }}</div><div class="l">Open ports (top)</div></div>
+<div class="card"><div class="n">{{ http|length }}</div><div class="l">HTTP (recent)</div></div>
+<div class="card"><div class="n">{{ findings|length }}</div><div class="l">Findings (recent)</div></div>
+</div>
+<div class="grid2">
+<div class="panel"><h3>Subdomains</h3><table>{% for s in subdomains %}<tr><td>{{ s.hostname }}</td><td>{{ s.dns_status }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table><a href="/subdomains/?target={{ target.id }}">All →</a></div>
+<div class="panel"><h3>Open ports</h3><table>{% for p in ports %}<tr><td>{{ p.ip }}:{{ p.port }}</td><td>{{ p.service }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table><a href="/ports/?target={{ target.id }}">All →</a></div>
+</div>
+<div class="grid2">
+<div class="panel"><h3>HTTP services</h3><table>{% for h in http %}<tr><td>{{ h.url|truncatechars:60 }}</td><td>{{ h.status_code }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table></div>
+<div class="panel"><h3>Technologies</h3><table>{% for t2 in techs %}<tr><td>{{ t2.product }}</td><td>{{ t2.version }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table></div>
+</div>
+<div class="grid2">
+<div class="panel"><h3>CVEs</h3><table>{% for c in cves %}<tr><td>{{ c.cve_id }}</td><td>{{ c.status }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table></div>
+<div class="panel"><h3>Findings</h3><table>{% for f in findings %}<tr><td><span class="badge b-{{ f.severity }}">{{ f.severity }}</span> {{ f.title|truncatechars:60 }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table></div>
+</div>
+<div class="panel"><h3>Scope rules</h3><table>{% for r in rules %}<tr><td>{{ r.rule_type }}</td><td>{{ r.value }}</td></tr>{% empty %}<tr><td>No extra rules (root domain scope).</td></tr>{% endfor %}</table></div>
+<div class="grid2">
+<div class="panel"><h3>Events</h3><div id="live-feed">{% for e in events %}<div class="ev"><span class="badge b-{{ e.severity }}">{{ e.event_type }}</span> {{ e.asset_value|truncatechars:70 }}</div>{% endfor %}</div></div>
+<div class="panel"><h3>Jobs</h3><table>{% for j in jobs %}<tr><td><a href="/jobs/{{ j.id }}/">{{ j.job_type }}</a></td><td><span class="badge b-{{ j.status }}">{{ j.status }}</span></td><td>{{ j.progress }}%</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table></div>
+</div>
+{% endblock %}

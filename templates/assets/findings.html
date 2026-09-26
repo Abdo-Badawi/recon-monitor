@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Findings{% endblock %}
+{% block content %}<h2>Security findings</h2>
+<div class="filters"><form method="get"><select name="severity"><option value="">all severities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option><option>INFO</option></select><select name="status"><option value="">all</option><option>NEW</option><option>OPEN</option><option>CONFIRMED</option><option>FALSE_POSITIVE</option><option>RESOLVED</option></select><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Severity</th><th>Title</th><th>Asset</th><th>Source</th><th>Status</th></tr>
+{% for f in page %}<tr><td><span class="badge b-{{ f.severity }}">{{ f.severity }}</span></td><td>{{ f.title|truncatechars:70 }}</td><td>{{ f.asset_value|truncatechars:50 }}</td><td>{{ f.source }}</td><td>{{ f.status }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

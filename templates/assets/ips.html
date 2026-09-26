@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}IPs{% endblock %}
+{% block content %}<h2>IP addresses</h2>
+<div class="panel"><table><tr><th>IP</th><th>Target</th><th>Sources</th><th>Last seen</th></tr>
+{% for i in page %}<tr><td>{{ i.ip }}</td><td>{{ i.target.root_domain }}</td><td>{{ i.source_hostnames|join:", "|truncatechars:80 }}</td><td>{{ i.last_seen }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

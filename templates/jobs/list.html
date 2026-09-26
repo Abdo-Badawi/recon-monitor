@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Jobs{% endblock %}
+{% block content %}<h2>Scan jobs</h2>
+<div class="filters"><form method="get"><input name="status" value="{{ status }}" placeholder="status"><input name="type" value="{{ jtype }}" placeholder="type"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>ID</th><th>Target</th><th>Type</th><th>Tool</th><th>Status</th><th>Progress</th><th>Created</th><th></th></tr>
+{% for j in page %}<tr><td>{{ j.id }}</td><td>{{ j.target.root_domain }}</td><td>{{ j.job_type }}</td><td>{{ j.tool }}</td><td><span class="badge b-{{ j.status }}">{{ j.status }}</span></td><td>{{ j.progress }}%</td><td>{{ j.created_at }}</td><td><a href="/jobs/{{ j.id }}/">Logs</a></td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

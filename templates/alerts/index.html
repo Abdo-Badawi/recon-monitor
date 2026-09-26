@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Alerts{% endblock %}
+{% block content %}<h2>Alert deliveries (Discord history)</h2>
+<div class="filters"><form method="get"><select name="status"><option value="">all statuses</option>{% for s in statuses %}<option {% if s == status %}selected{% endif %}>{{ s }}</option>{% endfor %}</select><select name="severity"><option value="">all severities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option><option>INFO</option></select><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Time</th><th>Event</th><th>Severity</th><th>Channel</th><th>Status</th><th>Sent</th><th>Response / error</th></tr>
+{% for a in page %}<tr><td>{{ a.created_at|date:"m-d H:i:s" }}</td><td>{{ a.event.event_type }}<br><span style="color:var(--mut)">{{ a.event.asset_value|truncatechars:60 }}</span></td><td><span class="badge b-{{ a.event.severity }}">{{ a.event.severity }}</span></td><td>{{ a.channel }}</td><td><span class="badge">{{ a.status }}</span></td><td>{{ a.sent_at|default:"—" }}</td><td>{{ a.response|default:a.error|truncatechars:80 }}</td></tr>{% empty %}<tr><td colspan="7">No alerts.</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

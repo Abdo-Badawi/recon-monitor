@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Recon Monitor{% endblock %}
+{% block content %}
+<h2>Security Overview</h2>
+<div class="cards">
+<div class="card"><div class="n">{{ counts.targets }}</div><div class="l">Targets</div></div>
+<div class="card"><div class="n">{{ counts.subdomains }}</div><div class="l">Subdomains</div></div>
+<div class="card"><div class="n">{{ counts.ips }}</div><div class="l">IPs</div></div>
+<div class="card"><div class="n">{{ counts.ports }}</div><div class="l">Open Ports</div></div>
+<div class="card"><div class="n">{{ counts.http }}</div><div class="l">HTTP Services</div></div>
+<div class="card"><div class="n">{{ counts.js }}</div><div class="l">JS Files</div></div>
+<div class="card"><div class="n">{{ counts.cves }}</div><div class="l">CVE Candidates</div></div>
+<div class="card"><div class="n">{{ counts.findings }}</div><div class="l">Open Findings</div></div>
+</div>
+<div class="grid2">
+<div class="panel"><h3>Recent changes (live)</h3><div id="live-feed">
+{% for e in events %}<div class="ev"><time>{{ e.created_at|date:"H:i" }}</time><span class="badge b-{{ e.severity }}">{{ e.event_type }}</span> {{ e.asset_value|truncatechars:80 }}</div>{% empty %}<p>No events yet. Add a target and start a baseline scan.</p>{% endfor %}
+</div><p><a href="/events/">All events →</a></p></div>
+<div class="panel"><h3>Scan status</h3>
+<table><tr><th>Target</th><th>Job</th><th>Status</th><th>Progress</th></tr>
+{% for j in jobs %}<tr><td>{{ j.target.root_domain }}</td><td>{{ j.job_type }}</td><td><span class="badge b-{{ j.status }}">{{ j.status }}</span></td><td>{{ j.progress }}%</td></tr>{% empty %}<tr><td colspan="4">No jobs yet.</td></tr>{% endfor %}</table>
+<p>Queued: {{ job_counts.QUEUED|default:0 }} · Running: {{ job_counts.RUNNING|default:0 }} · Failed: {{ job_counts.FAILED|default:0 }}</p>
+<h3>Findings by severity</h3>
+{% for r in findings_by_sev %}<div><span class="badge b-{{ r.severity }}">{{ r.severity }}</span> {{ r.n }}</div>{% empty %}<p>No findings.</p>{% endfor %}
+</div>
+</div>
+<div class="panel"><h3>Targets</h3>
+<table><tr><th>Root domain</th><th>Status</th><th>Baseline</th><th>Last scan</th></tr>
+{% for t in targets %}<tr><td><a href="/targets/{{ t.id }}/">{{ t.root_domain }}</a></td><td><span class="badge b-{{ t.status }}">{{ t.status }}</span></td><td>{{ t.baseline_status }}</td><td>{{ t.last_scan|default:"—" }}</td></tr>{% endfor %}</table>
+</div>
+{% endblock %}

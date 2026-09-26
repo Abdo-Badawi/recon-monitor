@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}API endpoints{% endblock %}
+{% block content %}<h2>API endpoints</h2>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="url contains"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Method</th><th>URL</th><th>Type</th><th>Auth hints</th><th>Source</th></tr>
+{% for a in page %}<tr><td>{{ a.method }}</td><td>{{ a.url|truncatechars:80 }}</td><td>{{ a.api_type }}</td><td>{{ a.auth_indicators|join:", " }}</td><td>{{ a.source }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Export history{% endblock %}
+{% block content %}<h2>Export history</h2>
+<div class="panel"><table><tr><th>Created</th><th>Target</th><th>Type</th><th>Format</th><th>Rows</th><th>Status</th><th></th></tr>
+{% for j in jobs %}<tr><td>{{ j.created_at }}</td><td>{{ j.target.root_domain }}</td><td>{{ j.export_type }}</td><td>{{ j.format }}</td><td>{{ j.row_count }}</td><td><span class="badge">{{ j.status }}</span></td><td>{% if j.status == "COMPLETED" %}<a href="/monitoring/exports/{{ j.id }}/download/">Download</a>{% endif %}</td></tr>{% empty %}<tr><td colspan="7">No exports.</td></tr>{% endfor %}</table></div>
+{% endblock %}

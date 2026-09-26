@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}JS scan{% endblock %}
+{% block content %}<h2>JS analysis: {{ js.js_url|truncatechars:80 }}</h2>
+<p>Target: <a href="/targets/{{ js.target.id }}/">{{ js.target.root_domain }}</a> · SHA256: {{ js.sha256|slice:":16" }}… · Size: {{ js.size }} · Discovered via: {{ js.discovered_from|default:js.host|truncatechars:80 }}</p>
+<div class="filters"><form method="get">{% for j in jobs %}<button name="job" value="{{ j.id }}" class="btn ghost">#{{ j.id }} {{ j.status }} {{ j.trigger }}</button> {% endfor %}</form></div>
+{% if job %}<div class="panel"><h3>Job #{{ job.id }} — <span class="badge b-{{ job.status }}">{{ job.status }}</span> · Stage: {{ job.current_stage }} · {{ job.progress }}%</h3>
+<p>Started: {{ job.started_at|default:"—" }} · Finished: {{ job.finished_at|default:"—" }}</p>
+{% if job.error %}<p style="color:var(--crit)">{{ job.error }}</p>{% endif %}
+<h3>Stage results</h3><table><tr><th>Stage</th><th>Result</th></tr>{% for k,v in job.stages.items %}<tr><td>{{ k }}</td><td>{{ v }}</td></tr>{% endfor %}</table>
+<h3>Stats</h3><pre>{{ job.stats }}</pre>
+<h3>Logs</h3><table>{% for l in logs %}<tr><td>{{ l.created_at|date:"H:i:s" }}</td><td>{{ l.level }}</td><td>{{ l.stage }}</td><td>{{ l.tool }}</td><td>{{ l.message|truncatechars:160 }}</td></tr>{% empty %}<tr><td>No logs yet.</td></tr>{% endfor %}</table></div>
+{% else %}<div class="panel"><p>No analysis job yet. One is queued automatically on NEW_JS/JS_CHANGED.</p></div>{% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Subdomains{% endblock %}
+{% block content %}<h2>Subdomains</h2>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="hostname"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Hostname</th><th>Target</th><th>Sources</th><th>DNS</th><th>Last seen</th></tr>
+{% for s in page %}<tr><td>{{ s.hostname }}</td><td>{{ s.target.root_domain }}</td><td>{{ s.sources|join:", " }}</td><td>{{ s.dns_status }}</td><td>{{ s.last_seen }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}&q={{ q }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}&q={{ q }}">next</a>{% endif %}</div></div>
+{% endblock %}

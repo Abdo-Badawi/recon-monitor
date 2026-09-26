@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Targets{% endblock %}
+{% block content %}<h2>Targets</h2>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="filter domain"><select name="status"><option value="">all</option><option>ACTIVE</option><option>PAUSED</option><option>DISABLED</option></select><button>Filter</button></form><a class="btn" href="/targets/add/">Add Target</a></div>
+<div class="panel"><table><tr><th>Root domain</th><th>Status</th><th>Auth</th><th>Baseline</th><th>Last scan</th><th></th></tr>
+{% for t in targets %}<tr><td><a href="/targets/{{ t.id }}/">{{ t.root_domain }}</a></td><td><span class="badge b-{{ t.status }}">{{ t.status }}</span></td><td>{{ t.authorization_status }}</td><td>{{ t.baseline_status }}</td><td>{{ t.last_scan|default:"—" }}</td><td><a href="/targets/{{ t.id }}/">Open</a></td></tr>{% empty %}<tr><td colspan="6">No targets. <a href="/targets/add/">Add one</a>.</td></tr>{% endfor %}</table></div>
+{% endblock %}

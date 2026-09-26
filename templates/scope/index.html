@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Scope{% endblock %}
+{% block content %}<h2>Scope management</h2>
+<div class="filters"><form method="get"><select name="target"><option value="">all targets</option>{% for t in targets %}<option value="{{ t.id }}" {% if t.id|stringformat:"s" == target_id %}selected{% endif %}>{{ t.root_domain }}</option>{% endfor %}</select><button>Filter</button></form><a class="btn" href="/scope/add/">Add rule</a></div>
+<div class="panel"><table><tr><th>Target</th><th>Type</th><th>Value</th><th></th></tr>
+{% for r in rules %}<tr><td>{{ r.target.root_domain|default:"global" }}</td><td>{{ r.rule_type }}</td><td>{{ r.value }}</td><td><a href="/scope/{{ r.id }}/delete/">Delete</a></td></tr>{% empty %}<tr><td colspan="4">No rules.</td></tr>{% endfor %}</table></div>
+{% endblock %}

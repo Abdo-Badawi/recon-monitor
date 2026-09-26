@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}URLs{% endblock %}
+{% block content %}<h2>URLs</h2>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="url contains"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>URL</th><th>Host</th><th>Source</th><th>Status</th><th>API</th></tr>
+{% for u in page %}<tr><td>{{ u.canonical_url|truncatechars:80 }}</td><td>{{ u.host }}</td><td>{{ u.source }}</td><td>{{ u.status_code|default:"—" }}</td><td>{{ u.is_api }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

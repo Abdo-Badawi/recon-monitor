@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Monitoring{% endblock %}
+{% block content %}<h2>Monitoring</h2>
+<div class="panel"><h3>Baselines</h3><table><tr><th>Target</th><th>Status</th><th>Started</th><th>Completed</th></tr>
+{% for b in baselines %}<tr><td>{{ b.target.root_domain }}</td><td>{{ b.status }}</td><td>{{ b.started_at|default:"—" }}</td><td>{{ b.completed_at|default:"—" }}</td></tr>{% empty %}<tr><td colspan="4">No baselines yet.</td></tr>{% endfor %}</table></div>
+<div class="panel"><h3>CVE database freshness</h3><table><tr><th>Source</th><th>Last synced</th><th>Records</th></tr>
+{% for c in cve_state %}<tr><td>{{ c.source }}</td><td>{{ c.last_synced|default:"never" }}</td><td>{{ c.record_count }}</td></tr>{% empty %}<tr><td colspan="3">Never synced. Run <code>sync_cve_database</code>.</td></tr>{% endfor %}</table></div>
+{% endblock %}

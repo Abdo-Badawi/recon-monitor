@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Technologies{% endblock %}
+{% block content %}<h2>Technologies</h2>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="product"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Product</th><th>Version</th><th>Asset</th><th>Conf</th><th>Source</th></tr>
+{% for t in page %}<tr><td>{{ t.product }}</td><td>{{ t.version|default:"—" }}</td><td>{{ t.asset_value|truncatechars:60 }}</td><td>{{ t.confidence }}</td><td>{{ t.source }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

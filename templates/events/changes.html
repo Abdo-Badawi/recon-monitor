@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}What's New{% endblock %}
+{% block content %}
+<h2>What's New{% if target %} — {{ target.root_domain }}{% endif %}</h2>
+<div class="panel"><h3>Summary</h3>
+{% for s in summary %}<span class="badge b-INFO">{{ s.event_type }}: {{ s.n }}</span> {% empty %}No changes in range.{% endfor %}
+</div>
+<div class="filters"><form method="get">
+<select name="since"><option value="1h">Last 1 hour</option><option value="6h" {% if since == "6h" %}selected{% endif %}>Last 6 hours</option><option value="24h" {% if since == "24h" %}selected{% endif %}>Last 24 hours</option><option value="7d" {% if since == "7d" %}selected{% endif %}>Last 7 days</option><option value="since_baseline" {% if since == "since_baseline" %}selected{% endif %}>Since baseline</option></select>
+{% if not target %}<select name="target"><option value="">all targets</option>{% for t in targets %}<option value="{{ t.id }}" {% if t.id|stringformat:"s" == target_id %}selected{% endif %}>{{ t.root_domain }}</option>{% endfor %}</select>{% endif %}
+<input name="type" value="{{ etype }}" placeholder="event type"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Time</th><th>Target</th><th>Event</th><th>Asset</th><th>Source</th><th>Severity</th></tr>
+{% for e in page %}<tr><td>{{ e.created_at|date:"m-d H:i" }}</td><td>{{ e.target.root_domain|default:"—" }}</td><td><span class="badge b-{{ e.severity }}">{{ e.event_type }}</span></td><td>{{ e.asset_value|truncatechars:70 }}</td><td>{{ e.source }}</td><td>{{ e.severity }}</td></tr>{% empty %}<tr><td colspan="6">No changes.</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}&since={{ since }}&type={{ etype }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}&since={{ since }}&type={{ etype }}">next</a>{% endif %}</div></div>
+{% endblock %}

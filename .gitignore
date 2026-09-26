@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+db.sqlite3
+/staticfiles/
+/media/
+data/raw/*
+!data/raw/.gitkeep
+data/artifacts/*
+!data/artifacts/.gitkeep
+data/exports/*
+!data/exports/.gitkeep
+data/reports/*
+!data/reports/.gitkeep
+celerybeat-schedule

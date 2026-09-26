@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}JavaScript{% endblock %}
+{% block content %}<h2>JavaScript assets</h2>
+<div class="cards">
+<div class="card"><div class="n">{{ totals.total }}</div><div class="l">Total JS</div></div>
+<div class="card"><div class="n">{{ totals.queued }}</div><div class="l">Queued</div></div>
+<div class="card"><div class="n">{{ totals.running }}</div><div class="l">Running</div></div>
+<div class="card"><div class="n">{{ totals.completed }}</div><div class="l">Completed</div></div>
+<div class="card"><div class="n">{{ totals.failed }}</div><div class="l">Failed</div></div>
+</div>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="js url"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>JS URL</th><th>SHA256</th><th>Analysis</th><th>Stage</th><th>Routes</th><th>Secrets?</th><th></th></tr>
+{% for j in page %}<tr><td><a href="/javascript/{{ j.id }}/scan/">{{ j.js_url|truncatechars:60 }}</a></td><td>{{ j.sha256|slice:":12" }}…</td><td>{% if j.latest_job %}<span class="badge b-{{ j.latest_job.status }}">{{ j.latest_job.status }}</span>{% else %}—{% endif %}</td><td>{{ j.latest_job.current_stage|default:"—" }}</td><td>{{ j.routes|length }}</td><td>{{ j.secret_candidates }}</td><td><a href="/javascript/{{ j.id }}/diff/">diff</a></td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}System health{% endblock %}
+{% block content %}<h2>Tools & system</h2>
+<div class="panel"><h3>Database: {{ db }}</h3>
+<p>Jobs — {% for k,v in job_counts.items %}{{ k }}: {{ v }} · {% endfor %}</p></div>
+<div class="panel"><h3>Recon tools</h3><table><tr><th>Tool</th><th>Version</th><th>Path</th><th>Status</th></tr>
+{% for t in tools %}<tr><td>{{ t.tool }}</td><td>{{ t.version }}</td><td>{{ t.path }}</td><td><span class="badge {% if t.status == 'OK' %}b-COMPLETED{% endif %}">{{ t.status }}</span></td></tr>{% endfor %}</table>
+<p style="color:var(--mut)">Missing tools are marked MISSING and skipped at runtime — the pipeline never crashes because of them.</p></div>
+<div class="panel"><h3>Recent alert deliveries</h3><table>{% for a in recent_alerts %}<tr><td>{{ a.created_at }}</td><td>{{ a.event.event_type }}</td><td>{{ a.status }}</td></tr>{% empty %}<tr><td>—</td></tr>{% endfor %}</table></div>
+{% endblock %}

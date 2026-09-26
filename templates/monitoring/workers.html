@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Workers{% endblock %}
+{% block content %}<h2>Workers & queues</h2>
+<div class="panel"><p>Eager mode: <b>{{ eager }}</b> · Broker: <code>{{ broker }}</code></p>
+<p style="color:var(--mut)">{{ error }}</p>
+<h3>Queues</h3><p>{% for q in queues %}<span class="badge">{{ q }}</span> {% endfor %}</p>
+<h3>Task routing</h3><table><tr><th>Task pattern</th><th>Queue</th></tr>{% for k,v in routes.items %}<tr><td>{{ k }}</td><td>{{ v.queue }}</td></tr>{% endfor %}</table>
+<h3>Beat schedule</h3><table><tr><th>Job</th><th>Task</th><th>Every (s)</th></tr>{% for k,v in beat.items %}<tr><td>{{ k }}</td><td>{{ v.task }}</td><td>{{ v.schedule }}</td></tr>{% endfor %}</table></div>
+{% if active %}<div class="panel"><h3>Active workers</h3><pre>{{ active }}</pre></div>{% endif %}
+{% endblock %}

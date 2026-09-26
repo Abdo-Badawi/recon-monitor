@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Asset{% endblock %}
+{% block content %}<div class="panel"><h3><span class="badge">{{ asset.asset_type }}</span> {{ asset.value|truncatechars:120 }}</h3>
+<p>Target: <a href="/targets/{{ asset.target.id }}/">{{ asset.target.root_domain }}</a></p>
+<p>First seen: {{ asset.first_seen }} · Last seen: {{ asset.last_seen }} · Active: {{ asset.is_active }}</p>
+<pre>{{ asset.metadata }}</pre></div>{% endblock %}

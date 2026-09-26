@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}CVEs{% endblock %}
+{% block content %}<h2>CVE candidates</h2>
+<p>Candidates are <b>not</b> confirmed vulnerabilities — version match alone is never enough.</p>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="CVE id"><select name="status"><option value="">all</option><option>candidate</option><option>potentially_affected</option><option>validated</option><option>not_affected</option><option>unknown</option></select><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>CVE</th><th>Product</th><th>Version</th><th>Asset</th><th>Status</th><th>Confidence</th></tr>
+{% for c in page %}<tr><td>{{ c.cve_id }}</td><td>{{ c.product }}</td><td>{{ c.detected_version }}</td><td>{{ c.asset_value|truncatechars:50 }}</td><td><span class="badge">{{ c.status }}</span></td><td>{{ c.confidence }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

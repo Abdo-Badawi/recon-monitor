@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Events{% endblock %}
+{% block content %}<h2>Live events</h2>
+<div class="filters"><form method="get"><input name="type" value="{{ etype }}" placeholder="event type"><select name="severity"><option value="">all</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option><option>INFO</option><option>CRITICAL</option></select><button>Filter</button></form></div>
+<div class="panel"><div id="live-feed">
+{% for e in page %}<div class="ev"><time>{{ e.created_at|date:"Y-m-d H:i" }}</time> <span class="badge b-{{ e.severity }}">{{ e.event_type }}</span> <b>{{ e.asset_value|truncatechars:90 }}</b> <span style="color:var(--mut)">{{ e.target.root_domain|default:"" }} · {{ e.source }}</span></div>{% empty %}<p>No events.</p>{% endfor %}
+</div>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

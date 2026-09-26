@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}Health{% endblock %}
+{% block content %}<div class="panel"><h3>Health: {{ status }}</h3><p>Database: {{ database }}</p><p>Tools OK: {{ tools.ok }}/{{ tools.total }}</p></div>{% endblock %}

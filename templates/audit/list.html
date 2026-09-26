@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Audit log{% endblock %}
+{% block content %}<h2>Audit log</h2>
+<div class="panel"><table><tr><th>Time</th><th>User</th><th>Action</th><th>Object</th><th>IP</th></tr>
+{% for a in page %}<tr><td>{{ a.created_at }}</td><td>{{ a.user.username|default:"—" }}</td><td>{{ a.action }}</td><td>{{ a.object_type }}:{{ a.object_id }}</td><td>{{ a.ip|default:"—" }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

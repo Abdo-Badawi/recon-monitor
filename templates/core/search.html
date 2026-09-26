@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Search{% endblock %}
+{% block content %}<h2>Search: “{{ q }}”</h2>
+<div class="panel"><table><tr><th>Type</th><th>Value</th></tr>
+{% for r in results %}<tr><td><span class="badge">{{ r.type }}</span></td><td>{{ r.value }}</td></tr>{% empty %}<tr><td colspan="2">No results.</td></tr>{% endfor %}</table></div>
+{% endblock %}

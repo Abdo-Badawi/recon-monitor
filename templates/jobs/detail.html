@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Job {{ job.id }}{% endblock %}
+{% block content %}<h2>Job #{{ job.id }} — {{ job.job_type }} <span class="badge b-{{ job.status }}">{{ job.status }}</span></h2>
+<div class="panel"><p>Target: <a href="/targets/{{ job.target.id }}/">{{ job.target.root_domain }}</a> · Tool: {{ job.tool }} · Progress: {{ job.progress }}% · Started: {{ job.started_at }} · Finished: {{ job.finished_at|default:"—" }}</p>
+{% if job.error %}<p style="color:var(--crit)">{{ job.error }}</p>{% endif %}
+<pre>{{ job.stats }}</pre>
+<div class="row-actions"><form class="inline" method="post" action="/jobs/{{ job.id }}/cancel/">{% csrf_token %}<button class="btn ghost">Cancel</button></form><form class="inline" method="post" action="/jobs/{{ job.id }}/retry/">{% csrf_token %}<button class="btn ghost">Retry</button></form></div></div>
+<div class="panel"><h3>Logs</h3><table>{% for l in logs %}<tr><td>{{ l.created_at|date:"H:i:s" }}</td><td>{{ l.level }}</td><td>{{ l.tool }}</td><td>{{ l.message|truncatechars:160 }}</td></tr>{% empty %}<tr><td>No logs.</td></tr>{% endfor %}</table></div>
+{% endblock %}

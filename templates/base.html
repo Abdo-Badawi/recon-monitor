@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Recon Monitor{% endblock %}</title>
+<link rel="stylesheet" href="/static/css/app.css">
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<div class="brand">◈ RECON<span>MONITOR</span></div>
+<nav>
+<div class="nav-sec">Main</div>
+<a href="/dashboard/">Dashboard</a>
+<div class="nav-sec">Targets</div>
+<a href="/targets/">All Targets</a>
+<a href="/targets/add/">Add Target</a>
+<div class="nav-sec">Attack Surface</div>
+<a href="/assets/">Assets</a>
+<a href="/subdomains/">Subdomains</a>
+<a href="/assets/ips/">IPs</a>
+<a href="/ports/">Ports</a>
+<a href="/http/">HTTP Services</a>
+<a href="/urls/">URLs</a>
+<a href="/apis/">APIs</a>
+<div class="nav-sec">Intelligence</div>
+<a href="/javascript/">JavaScript</a>
+<a href="/technologies/">Technologies</a>
+<a href="/cves/">CVEs</a>
+<a href="/findings/">Findings</a>
+<div class="nav-sec">Monitoring</div>
+<a href="/changes/">What's New</a>
+<a href="/events/">Live Events</a>
+<a href="/jobs/">Jobs</a>
+<a href="/logs/">Logs</a>
+<a href="/monitoring/">Monitoring</a>
+<a href="/monitoring/workers/">Workers</a>
+<div class="nav-sec">Exports</div>
+<a href="/monitoring/exports/">Export History</a>
+<div class="nav-sec">System</div>
+<a href="/scope/">Scope</a>
+<a href="/settings/system/">Tools & System</a>
+<a href="/alerts/">Alerts</a>
+<a href="/audit/">Audit Log</a>
+<a href="/settings/">Settings</a>
+</nav>
+<div class="side-foot">
+{% if user.is_authenticated %}<span>{{ user.username }}</span> <a href="/accounts/logout/">Logout</a>{% else %}<a href="/accounts/login/">Login</a>{% endif %}
+</div>
+</aside>
+<main class="main">
+<header class="topbar">
+<form action="/search/" method="get" class="search"><input name="q" placeholder="Search assets, IPs, URLs, CVEs…" value="{{ q|default:'' }}"><button>Search</button></form>
+<div id="live-dot" class="live-dot" title="websocket">● LIVE</div>
+</header>
+{% if messages %}<div class="msgs">{% for m in messages %}<div class="msg">{{ m }}</div>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}
+</main>
+</div>
+<script src="/static/js/live.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

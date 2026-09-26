@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}HTTP services{% endblock %}
+{% block content %}<h2>HTTP services</h2>
+<div class="filters"><form method="get"><input name="q" value="{{ q }}" placeholder="url"><input name="status" value="{{ status }}" placeholder="status" size="6"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>URL</th><th>Status</th><th>Title</th><th>Server</th><th>Last seen</th></tr>
+{% for h in page %}<tr><td>{{ h.url|truncatechars:70 }}</td><td>{{ h.status_code }}</td><td>{{ h.title|truncatechars:40 }}</td><td>{{ h.server|truncatechars:30 }}</td><td>{{ h.last_seen }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}

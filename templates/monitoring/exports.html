@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Exports — {{ target.root_domain }}{% endblock %}
+{% block content %}<h2>Exports — {{ target.root_domain }}</h2>
+<div class="panel"><h3>Generate export</h3>
+<form method="post" action="/targets/{{ target.id }}/exports/create/">{% csrf_token %}
+<select name="export_type">{% for v,l in types %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select>
+<select name="format"><option value="txt">TXT</option><option value="json">JSON</option><option value="csv">CSV</option></select>
+<label><input type="checkbox" name="active_only" checked> active only</label>
+<label>since <input type="date" name="since"></label>
+<button>Generate (async)</button></form>
+<p style="color:var(--mut)">Snapshot ignores format and produces a ZIP with all TXT files + events.json + metadata.json. No secrets are included.</p></div>
+<div class="panel"><h3>History</h3><table><tr><th>Created</th><th>Type</th><th>Format</th><th>Rows</th><th>Status</th><th></th></tr>
+{% for j in jobs %}<tr><td>{{ j.created_at }}</td><td>{{ j.export_type }}</td><td>{{ j.format }}</td><td>{{ j.row_count }}</td><td><span class="badge">{{ j.status }}</span></td><td>{% if j.status == "COMPLETED" %}<a href="/monitoring/exports/{{ j.id }}/download/">Download</a>{% elif j.status == "FAILED" %}{{ j.error|truncatechars:60 }}{% else %}processing…{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No exports yet.</td></tr>{% endfor %}</table></div>
+{% endblock %}

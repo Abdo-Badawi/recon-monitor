@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}JS diff{% endblock %}
+{% block content %}<h2>JS diff: {{ js.js_url|truncatechars:80 }}</h2>
+<p>SHA256: {{ js.sha256 }} · Size: {{ js.size }} · Versions: {{ versions|length }}</p>
+<div class="panel"><h3>Diff (old → new)</h3>{% if diff %}<pre class="diff">{% for l in diff %}{{ l }}
+{% endfor %}</pre>{% else %}<p>No previous version to compare (single version stored).</p>{% endif %}</div>
+{% endblock %}

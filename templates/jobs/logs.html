@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Logs{% endblock %}
+{% block content %}<h2>Logs</h2>
+<div class="filters"><form method="get"><input name="level" value="{{ level }}" placeholder="level"><input name="tool" value="{{ tool }}" placeholder="tool"><button>Filter</button></form></div>
+<div class="panel"><table><tr><th>Time</th><th>Level</th><th>Job</th><th>Tool</th><th>Message</th></tr>
+{% for l in page %}<tr><td>{{ l.created_at }}</td><td>{{ l.level }}</td><td><a href="/jobs/{{ l.job.id }}/">#{{ l.job.id }}</a></td><td>{{ l.tool }}</td><td>{{ l.message|truncatechars:140 }}</td></tr>{% endfor %}</table>
+<div class="pager">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">prev</a>{% endif %} {{ page.number }}/{{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">next</a>{% endif %}</div></div>
+{% endblock %}
