@@ -5,6 +5,8 @@ Authorized security testing only. Every active operation passes through scope va
 ## Quickstart (dev, SQLite, no Redis needed)
 
 ```bash
+git clone https://github.com/Abdo-Badawi/recon-monitor.git
+cd recon-monitor
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
@@ -13,6 +15,8 @@ python manage.py createsuperuser
 python manage.py runserver
 # open http://127.0.0.1:8000/dashboard/
 ```
+
+Full guide (run, production, **all keys/tokens**): [`docs/setup.md`](docs/setup.md).
 
 Celery runs **eager** by default (`CELERY_TASK_ALWAYS_EAGER=True`), so scans execute
 in-process without Redis. For production set `CELERY_TASK_ALWAYS_EAGER=False` and
