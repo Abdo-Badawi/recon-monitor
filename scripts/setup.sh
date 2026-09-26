@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# One-command setup: you only provide YOUR private things (Discord webhook,
+# subfinder API keys). Everything else (secret key, database) is automatic.
+set -e
+cd "$(dirname "$0")/.."
+
+echo "== Recon Monitor setup =="
+
+# 1. Python env
+if [ ! -d .venv ]; then
+  echo "--> creating .venv"
+  python3 -m venv .venv
+fi
+.venv/bin/pip install --quiet -r requirements.txt
+echo "--> dependencies installed"
+
+# 2. .env (only private things; secrets/database auto-defaulted)
+if [ ! -f .env ]; then
+  cp .env.example .env
+  echo "--> created .env"
+fi
+if grep -q "^DISCORD_WEBHOOK_URL=$" .env 2>/dev/null; then
+  read -rp "Discord webhook URL (Enter to skip): " HOOK || HOOK=""
+  if [ -n "$HOOK" ]; then
+    # escape for sed
+    ESCAPED=$(printf '%s' "$HOOK" | sed 's/[&|]/\\&/g')
+    sed -i "s|^DISCORD_WEBHOOK_URL=$|DISCORD_WEBHOOK_URL=${ESCAPED}|" .env
+    sed -i "s|^DISCORD_ENABLED=False|DISCORD_ENABLED=True|" .env
+    echo "--> Discord enabled"
+  fi
+fi
+
+# 3. Subfinder API keys (optional)
+SCONF="$HOME/.config/subfinder/provider-config.yaml"
+if [ ! -f "$SCONF" ]; then
+  echo "--> tip: add subfinder API keys later with:"
+  echo "    subfinder -pc $SCONF"
+  echo "    (or edit the file directly; keys: shodan, censys, virustotal, github, chaos, urlscan...)"
+fi
+
+# 4. Database (SQLite, automatic)
+.venv/bin/python manage.py migrate --noinput
+echo "--> database ready"
+
+# 5. Admin user (only if none exists)
+NUSERS=$(echo "from django.contrib.auth.models import User; print(User.objects.count())" | .venv/bin/python manage.py shell 2>/dev/null | tail -n 1)
+if [ "$NUSERS" = "0" ]; then
+  ADMIN_PASS=$(.venv/bin/python -c "import secrets; print(secrets.token_urlsafe(12))")
+  .venv/bin/python manage.py createsuperuser --noinput --username admin --email admin@localhost >/dev/null 2>&1 || true
+  echo "
+from django.contrib.auth.models import User
+u = User.objects.get(username='admin')
+u.set_password('$ADMIN_PASS'); u.save()
+" | .venv/bin/python manage.py shell >/dev/null 2>&1
+  echo "=================================================="
+  echo "  Login: admin"
+  echo "  Password: $ADMIN_PASS"
+  echo "  (change it after login: Admin > Users)"
+  echo "=================================================="
+fi
+
+echo ""
+echo "Done. Start the app with:"
+echo "  ./scripts/start.sh"

@@ -4,6 +4,13 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(BASE_DIR / ".env")
+except ImportError:
+    pass
+
 
 def env(name, default=""):
     return os.environ.get(name, default)
@@ -16,9 +23,18 @@ def env_bool(name, default=False):
     return val.lower() in ("1", "true", "yes", "on")
 
 
-SECRET_KEY = env("DJANGO_SECRET_KEY", "dev-only-insecure-secret-key-change-me")
+SECRET_KEY = env("DJANGO_SECRET_KEY", "")
+if not SECRET_KEY or SECRET_KEY == "change-me-in-production-use-50-random-chars":
+    import logging as _logging
+
+    from django.core.management.utils import get_random_secret_key
+
+    SECRET_KEY = get_random_secret_key()
+    _logging.getLogger(__name__).warning(
+        "DJANGO_SECRET_KEY not set — using an ephemeral key. Sessions will reset on restart. "
+        "Set DJANGO_SECRET_KEY in .env for production.")
 DEBUG = env_bool("DJANGO_DEBUG", True)
-ALLOWED_HOSTS = [h.strip() for h in env("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
+ALLOWED_HOSTS = [h.strip() for h in env("ALLOWED_HOSTS", "*" if DEBUG else "localhost,127.0.0.1").split(",") if h.strip()]
 CSRF_TRUSTED_ORIGINS = [h.strip() for h in env("CSRF_TRUSTED_ORIGINS", "").split(",") if h.strip()]
 
 INSTALLED_APPS = [

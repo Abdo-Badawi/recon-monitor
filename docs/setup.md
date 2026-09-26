@@ -7,20 +7,29 @@
 - Optional (production): Docker + Docker Compose, PostgreSQL, Redis
 - Optional (richer scans): Go toolchain + recon binaries (see §5)
 
-## 2. Quickstart (development)
+## 2. Quickstart — one script, only YOUR private things needed
 
 ```bash
 git clone https://github.com/Abdo-Badawi/recon-monitor.git
 cd recon-monitor
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env          # then edit SECRET_KEY etc.
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver 0.0.0.0:8000
+./scripts/setup.sh     # asks only for your Discord webhook (optional)
+./scripts/start.sh     # open http://localhost:8000/dashboard/
 ```
 
-Open `http://localhost:8000/dashboard/` and log in.
+`setup.sh` creates the Python env, installs dependencies, generates the secret key,
+prepares the SQLite database, and creates the `admin` login (random password shown
+once — change it after login). No manual database or secret-key steps.
+
+Manual equivalent (if you prefer):
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env   # only fill DISCORD_WEBHOOK_URL if you want alerts
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
 
 > Dev defaults: SQLite database, Celery runs **eager** (no Redis needed),
 > missing recon tools are skipped gracefully.
