@@ -17,8 +17,16 @@ cd recon-monitor
 ```
 
 `setup.sh` creates the Python env, installs dependencies, generates the secret key,
-prepares the SQLite database, and creates the `admin` login (random password shown
-once — change it after login). No manual database or secret-key steps.
+prepares the SQLite database, and creates the `admin` login. No manual database or secret-key steps.
+
+### Default credentials
+
+- **Username:** `admin`
+- **Password:** randomly generated — printed once by `setup.sh`. Save it.
+- Missed it? Reset: `.venv/bin/python manage.py changepassword admin`
+- Change anytime: log in → **Admin** (`/admin/`) → Users → `admin`, or the
+  `changepassword` command above. Roles: Admin / Operator / Viewer
+  (new users default to Viewer; Admins can promote via profiles in `/admin/`).
 
 Manual equivalent (if you prefer):
 

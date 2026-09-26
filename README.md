@@ -23,8 +23,21 @@ cd recon-monitor
 ```
 
 `setup.sh` creates the Python env, installs dependencies, prepares the SQLite database,
-and creates the `admin` login (random password printed once — change it after login:
-Admin → Users). No manual database or secret-key steps.
+and creates the `admin` login. No manual database or secret-key steps.
+
+### Default credentials
+
+- **Username:** `admin`
+- **Password:** randomly generated — `setup.sh` prints it once at the end. Save it.
+- If you missed it, reset from the project directory:
+  ```bash
+  .venv/bin/python manage.py changepassword admin
+  ```
+
+### How to change the password
+
+- Via UI (logged in): **Admin** (`/admin/`) → Users → `admin` → change password, or
+- Via terminal: `.venv/bin/python manage.py changepassword admin`
 
 Expose it to your phone/another machine without opening firewall ports:
 
